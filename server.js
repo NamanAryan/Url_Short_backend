@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 app.use(cors({
-    origin: 'https://urlshortner-ba26q43hq-namanaryans-projects.vercel.app/'
+    origin: 'https://urlshorten-pdcz3est4-namanaryans-projects.vercel.app'
   }));
 
 app.get('/', (req, res) => {
