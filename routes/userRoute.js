@@ -3,6 +3,8 @@ import users from '../models/userModel.js';
 const router = express.Router();
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+
 
 router.post('/register', async (req, res) => {
     console.log("Register route hit");
