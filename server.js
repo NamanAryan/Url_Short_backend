@@ -10,8 +10,14 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 app.use(cors({
-    origin: true,
-  }));
+    origin: [
+        "https://url-shortner-delta-two.vercel.app",  // Your actual deployed URL
+        "http://localhost:5173"  // For local development
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
 app.get('/', (req, res) => {
     res.send("Status: Running");
