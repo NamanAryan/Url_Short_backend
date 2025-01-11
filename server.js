@@ -27,26 +27,27 @@ app.listen(PORT, () => {
     console.log(`Server started at port: ${PORT}`);
 });
 
-mongoose.connect(process.env.MONGODB_URI, {
+const mongoURI = process.env.MONGO_URL;
+console.log("Attempting to connect to MongoDB..."); // Add this
+console.log("MongoDB URI exists:", !!mongoURI); // This will log true/false without exposing the actual URI
+
+mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000,
-}).then(() => {
-    console.log('Connected to MongoDB');
-}).catch(err => {
-    console.error('MongoDB connection error:', err);
-});
-
-// Add connection event handlers
-mongoose.connection.on('error', err => {
-    console.error('MongoDB connection error:', err);
-});
-
-mongoose.connection.on('connected', () => {
-    console.log('MongoDB connected');
-});
-
-mongoose.connection.on('disconnected', () => {
-    console.log('MongoDB disconnected');
+    // Add these to help with connection issues
+    connectTimeoutMS: 10000,
+    retryWrites: true,
+    w: 'majority'
+})
+.then(() => {
+    console.log('Successfully connected to MongoDB');
+})
+.catch(err => {
+    console.error('MongoDB connection error details:', {
+        name: err.name,
+        message: err.message,
+        code: err.code
+    });
 });

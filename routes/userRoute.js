@@ -10,7 +10,8 @@ router.post('/register', async (req, res) => {
     try {
         const { fullName, email, password } = req.body;
         console.log("Destructured data:", { fullName, email }); // Don't log password
-
+        const connectionState = mongoose.connection.readyState;
+        console.log("MongoDB connection state:", connectionState);
         // Check if user already exists
         const existingUser = await users.findOne({ email });
         if (existingUser) {
