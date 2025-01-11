@@ -4,28 +4,49 @@ const router = express.Router();
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+// In backend userRoute.js
 router.post('/register', async (req, res) => {
+    console.log("Register route hit");
+    console.log("Request body:", req.body);
     try {
         const { fullName, email, password } = req.body;
+        console.log("Destructured data:", { fullName, email }); // Don't log password
+
+        // Check if user already exists
+        const existingUser = await users.findOne({ email });
+        if (existingUser) {
+            console.log("User already exists");
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);  
+        console.log("Salt generated");
         
+        const hashedPassword = await bcrypt.hash(password, salt);
+        console.log("Password hashed");
+
         const user = new users({
             fullName,
             email,
-            password: hashedPassword  // Changed this line
+            password: hashedPassword
         });
-        
+        console.log("User object created:", { fullName, email });
+
         await user.save();
-        
+        console.log("User saved to database");
+
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
             expiresIn: '30d',
         });
-        
+        console.log("Token generated");
+
         res.status(201).json({ token, message: 'User registered successfully' });
     } catch (error) {
-        console.error('Registration error:', error); // Add this line
-        res.status(500).json({ message: error.message }); // Changed to send actual error
+        console.error("Error in registration:", error);
+        res.status(500).json({ 
+            message: 'Registration failed', 
+            error: error.message 
+        });
     }
 });
 
