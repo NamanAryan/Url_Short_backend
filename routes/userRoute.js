@@ -4,7 +4,6 @@ const router = express.Router();
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-// In backend userRoute.js
 router.post('/register', async (req, res) => {
     console.log("Register route hit");
     console.log("Request body:", req.body);
